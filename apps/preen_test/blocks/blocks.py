@@ -440,7 +440,7 @@ class LinkTileNoTitle(LinkTile):
 
 
 class ManualLinkTileBlock(blocks.StructBlock):
-    tiles = blocks.StreamBlock([("tile", LinkTile())], icon="fa-cards")
+    tiles = blocks.StreamBlock([("tile", LinkTile()), ("fooblock", FullHeroBlock())], icon="fa-cards")
 
     class Meta:
         icon = "fa-th"
