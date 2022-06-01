@@ -3,6 +3,7 @@
 
 django-debug-toolbar
 ipython
+jupyter
 invoke
 pre-commit
 black
