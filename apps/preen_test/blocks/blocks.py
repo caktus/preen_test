@@ -8,8 +8,58 @@ from wagtail.core import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 
+from collections import deque
+from html.parser import HTMLParser
 
+from django.core.exceptions import ValidationError
+from django.forms.utils import ErrorList
+from django.template.defaultfilters import pluralize
+
+LETTERBOX_RATIO = Decimal(9 / 16)
 RICHTEXT_SUBHEADING_FEATURES = ["bold", "italic", "ol", "ul", "link", "document_link"]
+
+class ProperTagOrderParser(HTMLParser):
+    """ An HTML parser that ensures tags are properly closed. """
+
+    def __init__(self):
+        super().__init__()
+        self.tag_stack = deque()
+
+    def handle_starttag(self, tag, attrs):
+        self.tag_stack.append(tag)
+
+    def handle_endtag(self, tag):
+        expected_tag = self.tag_stack.pop()
+        if tag != expected_tag:
+            line, offset = self.getpos()
+            raise ValueError(
+                'Unexpected closing tag on line {} ({} offset): got "{}", expected "{}"'.format(
+                    line, offset, tag, expected_tag
+                )
+            )
+
+    def close(self):
+        if len(self.tag_stack) == 0:
+            return
+        raise ValueError(
+            "Tag{} not closed: {}".format(pluralize(len(self.tag_stack), " was,s were"), ", ".join(self.tag_stack))
+        )
+
+def clean_html_field(fields, field_name):
+    """ Validate a RawHTMLBlock field, ensuring that it is proper HTML. """
+    try:
+        parser = ProperTagOrderParser()
+        parser.feed(fields.get(field_name))
+        parser.close()
+    except ValueError as error:
+        field_details = {}
+        field_details[field_name] = ErrorList([ValidationError(error)])
+        raise ValidationError("Code validation error", params=field_details)
+    except IndexError:
+        field_details = {}
+        field_details[field_name] = ErrorList([ValidationError("Encountered closed tag before it was opened")])
+        raise ValidationError("Code validation error", params=field_details)
+
 
 # # # # # # # # # # # # #
 #    Abstract Blocks    #
@@ -201,7 +251,6 @@ class VideoIframeBlockBase(blocks.StructBlock):
 
     def clean(self, value):
         values = super().clean(value)
-        clean_html_field(values, "video_code")
         return values
 
 
@@ -249,6 +298,18 @@ class BaseContactFormChooser(blocks.StructBlock):
 # # # # # # # #
 #   Blocks    #
 # # # # # # # #
+
+from django.core import validators
+from django.forms.fields import URLField
+
+
+class HttpsUrlField(URLField):
+    """
+    A minimal adjustment to the URLField to ensure that
+    only HTTPS URLs are accepted.
+    """
+
+    default_validators = [validators.URLValidator(schemes=["https"])]
 
 
 class HttpsUrlBlock(blocks.FieldBlock):
@@ -515,27 +576,3 @@ class TwoColumnHtmlEmbedBlock(HtmlEmbedBlock):
         icon = "fa-columns"
         template = "gp_wagtail_block_library/blocks/two_column_html_embed_block.html"
         label = "Two Column HTML Embed"
-
-
-class GPBLNewsletterSignupBlock(blocks.StructBlock):
-    """Super projects that override the default form must override get_context to inject
-    the concrete form into the block render.
-    Example:
-
-        context = super().get_context(value, parent_context=parent_context)
-        context['form'] = <PROJECT_CONCRETE_FORM>
-        return context
-    """
-
-    background_image = ImageChooserBlock(required=True)
-    text = blocks.RichTextBlock(features=RICHTEXT_SUBHEADING_FEATURES)
-
-    class Meta:
-        icon = "fa-newspaper"
-        classnames = "icon fa-light fa-newspaper"
-        template = "gp_wagtail_block_library/blocks/newsletter_signup_form.html"
-
-    def get_context(self, value, parent_context=None):
-        context = super().get_context(value, parent_context=parent_context)
-        context["form"] = GPBLNewsletterSignupForm()
-        return context
