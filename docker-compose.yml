@@ -1,0 +1,16 @@
+version: "3.4"
+
+volumes:
+  dev_preen_test_data: {}
+
+services:
+  db:
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: preen_test
+      DATABASE_URL: postgres://postgres@127.0.01:7658/preen_test
+    image: postgres:14-alpine
+    ports:
+      - "7658:5432"
+    volumes:
+      - dev_preen_test_data:/var/lib/postgresql/data

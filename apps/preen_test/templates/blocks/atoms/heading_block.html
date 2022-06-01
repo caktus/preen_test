@@ -1,0 +1,4 @@
+{% if block.size == 'h1' %}<h1 class="{% if block.color_value == 'light' %}text-light{% else %}text-dark{% endif %}">{{ block.heading }}</h1>{% endif %}
+{% if block.size == 'large' %}<span class="{% if block.color_value == 'light' %}text-light{% else %}text-dark{% endif %}">{{ block.heading }}</span>{% endif %}
+{% if block.size == 'medium' %}<span class="{% if block.color_value == 'light' %}text-light{% else %}text-dark{% endif %}">{{ block.heading }}</span>{% endif %}
+{% if block.size == 'small' %}<span class="{% if block.color_value == 'light' %}text-light{% else %}text-dark{% endif %}">{{ block.heading }}</span>{% endif %}
