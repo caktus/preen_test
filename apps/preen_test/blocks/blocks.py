@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.forms.utils import ErrorList
 
 from wagtail.core import blocks
+from wagtail.core.blocks import PageChooserBlock
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 
@@ -12,6 +13,7 @@ from collections import deque
 from html.parser import HTMLParser
 
 from django.core.exceptions import ValidationError
+from django.db.models import TextChoices
 from django.forms.utils import ErrorList
 from django.template.defaultfilters import pluralize
 
@@ -299,112 +301,6 @@ class BaseContactFormChooser(blocks.StructBlock):
 #   Blocks    #
 # # # # # # # #
 
-from django.core import validators
-from django.forms.fields import URLField
-
-
-class HttpsUrlField(URLField):
-    """
-    A minimal adjustment to the URLField to ensure that
-    only HTTPS URLs are accepted.
-    """
-
-    default_validators = [validators.URLValidator(schemes=["https"])]
-
-
-class HttpsUrlBlock(blocks.FieldBlock):
-    """
-    A variation on the base Wagtail URLBlock, which simply wraps a URLField.
-    """
-
-    def __init__(self, required=True, help_text=None, max_length=None, min_length=None, **kwargs):
-        self.field = HttpsUrlField(
-            required=required,
-            help_text=help_text,
-            max_length=max_length,
-            min_length=min_length,
-        )
-        super().__init__(**kwargs)
-
-    class Meta:
-        icon = "site"
-
-
-class Accordion(blocks.StructBlock):
-    """
-    An expandable accordion with a heading which, when clicked, expands
-    a rich text field beneath it.
-    """
-
-    heading = blocks.CharBlock()
-    content = blocks.RichTextBlock(required=False)
-    embed = blocks.RawHTMLBlock(required=False)
-
-    class Meta:
-        icon = "fa-plus-square"
-        admin_text = "An accordion with a heading and content that expands when the heading is clicked."
-        template = "blocks/accordion_block.html"
-
-
-class BasicHeroBlock(blocks.StructBlock):
-    """
-    A basic hero with a required image and optional heading text.
-    """
-
-    image = ImageChooserBlock(required=False, help_text="Images will be cropped to 1380x500")
-    heading = blocks.CharBlock(
-        required=False,
-        help_text="Optional heading.",
-    )
-    use_as_h1 = blocks.BooleanBlock(
-        initial=False,
-        required=False,
-        help_text="Makes the Heading display as an h1 level heading. Note: There should be only one h1 level heading per page.",
-    )
-
-    class Meta:
-        icon = "fa-file-image-o"
-        admin_text = "An banner image with optional heading text"
-        template = "blocks/basic_hero_block.html"
-
-
-class TwoColumn(VideoIframeBlockBase, ReorderableStructBlock):
-    """
-    Displays a full-width block split in half with an image on one side and text on the other.
-    If video is present, the user can click a play button to play the video in a modal.
-    """
-
-    image = ImageChooserBlock(
-        help_text="If a video is also provided, this image will be used as a thumbnail as well as a fallback on very small screens",
-    )
-
-    text_on_left = blocks.BooleanBlock(
-        required=False,
-        default=True,
-        help_text="If checked, text will appear on the left side and the image will appear the right",
-    )
-
-    heading = blocks.CharBlock(required=False)
-    use_as_h1 = blocks.BooleanBlock(
-        initial=False,
-        required=False,
-        help_text="Makes the Heading display as an h1 level heading. Note: There should be only one h1 level heading per page.",
-    )
-    sub_heading = blocks.RichTextBlock(required=False)
-    cta_buttons = blocks.ListBlock(
-        CTAButtonBlock(required=False),
-        label='"Call to Action" buttons',
-        required=False,
-    )
-
-    class Meta:
-        icon = "fa-columns"
-        admin_text = (
-            "Two columns, side-by-side on large-enough screens, that display text on one side and an image on the other"
-        )
-        template = "blocks/two_column_block.html"
-        field_order = ["image", "video_code"]
-
 
 class FullHeroBlock(VideoIframeBlockBase, ReorderableStructBlock):
     image = ImageChooserBlock(required=True)
@@ -435,66 +331,6 @@ class LinkTile(blocks.StructBlock):
         template = "blocks/link_tile_block.html"
 
 
-class LinkTileNoTitle(LinkTile):
-    title = blocks.TextBlock(required=False)
-
-
-class ChildPageLinkTileBlock(blocks.StructBlock):
-    heading = blocks.CharBlock(required=False)
-    parent_page = blocks.PageChooserBlock()
-
-    class Meta:
-        icon = "fa-th"
-        template = "blocks/child_page_grid_block.html"
-
-
-class ExternalContentEmbedBlock(blocks.StructBlock):
-    """
-    Wagtail admin users can use this block to embed HTTP content using an iframe.
-    They must provide a URL that will be the src for the iframe content.
-
-    1. This block uses an iframe to display arbitrary content from another website.
-    2. This block requires the definition of an aspect ratio, because it is impossible
-       to make any generalizations about the intended size of third-party content.
-    """
-
-    url = HttpsUrlBlock(
-        help_text="This must be an HTTPs URL.",
-        label="URL",
-    )
-    aspect_ratio = blocks.DecimalBlock(
-        help_text=(
-            "The height-to-width ratio maintained by the displayed iframe. "
-            "If not specified, defaults to letterbox (9/16 = 0.5625). "
-            "Minimum value 0.05, maximum value 3.0."
-        ),
-        min_value=Decimal("0.05"),
-        max_value=Decimal("3.0"),
-        default=LETTERBOX_RATIO,
-        required=False,
-    )
-    allow_fullscreen = blocks.BooleanBlock(required=False, default=False)
-
-    def clean(self, value):
-        """
-        Because the default value is not re-supplied to the block
-        if no value is added, re-supply it during validation.
-        """
-        val = super().clean(value)
-        aspect_ratios = [
-            "aspect_ratio",
-        ]
-        for ratio in aspect_ratios:
-            if ratio not in val or not val[ratio]:
-                val[ratio] = LETTERBOX_RATIO
-        return val
-
-    class Meta:
-        icon = "media"
-        template = "blocks/external_content_embed.html"
-        label = "Embed External Content"
-
-
 class ColumnatedLinksBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=False, max_length=128, help_text="Optional header text for the block.")
 
@@ -515,64 +351,21 @@ class ColumnatedLinksBlock(blocks.StructBlock):
         label = "Two columns of links"
 
 
+class LocalChoices(TextChoices):
+    ONE = '1', "One",
+    TWO = '2', "Two",
+    THREE = '3', "Three"
+
+
 class ManualLinkTileBlock(blocks.StructBlock):
+
+    image = ImageChooserBlock()
+    document = DocumentChooserBlock()
+    page = PageChooserBlock()
+    choices = blocks.ChoiceBlock(choices=LocalChoices.choices)
+    lists = blocks.ListBlock(child_block=blocks.RichTextBlock())
     tiles = blocks.StreamBlock([("tile", LinkTile()), ("fooblock", FullHeroBlock()), ("column_links", ColumnatedLinksBlock())], icon="fa-cards")
 
     class Meta:
         icon = "fa-th"
         template = "blocks/tile_grid_block.html"
-
-
-class HtmlEmbedBlock(blocks.StructBlock):
-    """
-    Wagtail admin users can use this block to embed content using arbitrary HTML.
-    Typically this will be a script tag, in some form. This block is styled to fit
-    both the ContentFullWidth page and the ContentSidebar page. This block was
-    purpose-built to handle various data-viz and infographic embeds, but should be
-    general enough to handle arbitrary embeds.
-
-    This block is easily confused for the ExternalContentEmbedBlock. Below is the key difference.
-
-    1. The "code" here will not be used as a src on an iframe. It will simple be added to
-       the DOM where it is meant to be displayed. Therefore the "code" must contain its own
-       rendering login. The common format for this is a <div> and <script> tag.
-
-    """
-
-    code = blocks.RawHTMLBlock()
-    caption = blocks.CharBlock(
-        required=False,
-        max_length=40,
-        help_text="Caption text will appear below the embed content",
-    )
-
-    class Meta:
-        icon = "fa-line-chart"
-        template = "blocks/html_embed_block.html"
-        label = "Embed HTML"
-
-    def clean(self, value):
-        fields = super().clean(value)
-        clean_html_field(fields, "code")
-        return fields
-
-
-class TwoColumnHtmlEmbedBlock(HtmlEmbedBlock):
-    """
-    Provides a block consisting of two columns. One column is body content with a heading and a body.
-    The other column is the HtmlEmbedBlock
-
-    The order of the block display is up to the content creator.
-    """
-
-    copy = CopyBlock()
-    text_on_left = blocks.BooleanBlock(
-        required=False,
-        default=True,
-        help_text="If checked, text will appear on the left side and the image will appear the right",
-    )
-
-    class Meta:
-        icon = "fa-columns"
-        template = "blocks/two_column_html_embed_block.html"
-        label = "Two Column HTML Embed"
