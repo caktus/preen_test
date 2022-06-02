@@ -1,0 +1,10 @@
+{% firstof value.external_link value.internal_link.url value.document_link.url '/' as url %}
+{% firstof value.display_text value.internal_link.seo_title value.internal_link.title value.document_link as link_text  %}
+{% if link_text %}
+    <a href="{{ url }}"
+        class="__gp__cta-button {% if value.styled_as_primary %}__gp__cta-button--positive{% else %}__gp__cta-button--neutral{% endif %} {{ link_class }}"
+        {% if value.external_link or value.document_link %}target="_blank" rel="noopener noreferer"{% endif %}
+    />
+        {{ link_text }}
+    </a>
+{% endif %}

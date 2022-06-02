@@ -11,6 +11,7 @@ coverage
 invoke-kubesae
 awscli
 boto
+rich
 
 # For testing
 factory_boy

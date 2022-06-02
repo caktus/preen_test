@@ -1,0 +1,21 @@
+{% load wagtailcore_tags utility_tags %}
+{% unique_id as form_id %}
+
+{% firstof value.contact_form.id contact_form_id as contact_id %}
+
+<section id="contact-form-{{ form_id }}" class="contact-form__wrapper">
+  <form id="contact-us" class="contact-form"
+        hx-post="{% url 'contact-form' %}"
+        hx-target="#contact-form-{{ form_id }}"
+        hx-swap="outerHTML">
+
+      {{ cform.honeypot }}
+      {% if cform.custom_field %}
+        <input name="custom_field" type="text" placeholder="{{ value.custom_field }}"  {% if value.custom_field_required %}required{% endif %}>
+        <input type="hidden" name="custom_field_label" value="{{ value.custom_field }}" >
+      {% endif %}
+      {{ cform }}
+      <input type="hidden" name="contact_us_id" value="{{ contact_id }}">
+      <input class="contact-form__submit" type="submit" value="Contact Us">
+    </form>
+</section>

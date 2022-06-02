@@ -1,0 +1,11 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+{% static 'img/SC_pattern_blue_dark_rgb.png' as default_image %}
+{% image child_page.preview_thumbnail fill-320x320 as thumbnail %}
+{% firstof thumbnail.url default_image as image %}
+
+<div class="__gp__child-page-tile">
+  <a class="__gp__child-page-tile__link" href="{% pageurl child_page %}" >
+    <img class="__gp__child-page-tile__image" src="{{ image }}"></img>
+    <h3 class="__gp__child-page-tile__title"><span class="__gp__child-page-tile__title-text">{{ child_page.title }}</span><svg class="__gp__child-page-tile_caret"><use xlink:href="#chevron" /></svg></h3>
+  </a>
+</div>

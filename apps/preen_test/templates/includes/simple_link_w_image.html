@@ -1,0 +1,26 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+
+<div class="__gp__simple-link-w-image-block">
+    <div class="_gp__simple-link-w-image-block__wrapper">
+        {% if value.link %}
+            <div class="__gp__simple-link-w-image__image apply-cursor">
+                {% if value.image %}
+                    {% image value.image max-100x100 %}
+                {% endif %}
+            </div>
+            <a class="__gp__simple-link-w-image__link" href="{{ value.link }}" rel="noopener noreferrer" target="_blank">
+                <h3 class="__gp__simple-link-w-image__display-text">{{ value.display_text }}</h3>
+            </a>
+        {% else %}
+            <div class="__gp__simple-link-w-image__image">
+                {% if value.image %}
+                    {% image value.image max-100x100 %}
+                {% endif %}
+            </div>
+            <div class="__gp__simple-link-w-image__no-link">
+                <h3 class="__gp__simple-link-w-image__display-text">{{ value.display_text }}</h3>
+            </div>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,55 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{% image value.image fill-1280x728-c100 as image %}
+
+<article class="__gp__two-column-block">
+    {# The block #}
+    <div class="__gp__two-column-block__wrapper {% if not value.text_on_left %}reverse{% endif %}">
+        <div class="__gp__two-column-block__side __gp__two-column-block__text-side">
+            <div class="__gp__two-column-block__text-container">
+            {% if value.heading %}
+              {% if value.use_as_h1 %}
+                <h1 class="__gp__two-column-block__heading">{% include_block value.heading %}</h1>
+              {% else %}
+                <h2 class="__gp__two-column-block__heading">{% include_block value.heading %}</h2>
+              {% endif %}
+            {% endif %}
+
+            {% if value.sub_heading %}
+                <div class="__gp__two-column-block__sub-heading">{% include_block value.sub_heading %}</div>
+            {% endif %}
+
+            {% if value.cta_buttons %}
+                <div class="__gp__two-column-block__cta-buttons">
+                    {% for cta_button in value.cta_buttons %}
+                      {% include_block cta_button with link_class='__gp__two-column-block__cta-button' %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            </div>
+        </div>
+
+        <div class="__gp__two-column-block__side __gp__two-column-block__image-side">
+            <div class="__gp__two-column-block__image-container" style="background-image: url('{{ image.url }}'); {{ image.background_position_style }}">
+              {# until a better <img> layout solution can be devised for this block this is the best option to provide some accessibility #}
+              {# http://www.davidmacd.com/blog/alternate-text-for-css-background-images.html #}
+              <span role="img" aria-label="{{ image.alt }}"></span>
+              {% if  value.video_code %}
+              <button class="__gp__two-column-block__play-btn" data-modal-toggle>
+                  <svg class="__gp__two-column-block__play-icon"><use xlink:href="#play" /></svg>
+              </button>
+              {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# The modal #}
+    {% if  value.video_code %}
+    <div class="__gp__video-modal__underlay"></div>
+    <div class="__gp__video-modal__body">
+        <i class="__gp__video-modal__close-btn">
+          <svg class="__gp__video-modal__close-icon"><use xlink:href="#times" /></svg>
+        </i>
+        {% include_block value.video_code  %}
+    </div>
+    {% endif %}
+</article>

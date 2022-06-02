@@ -1,0 +1,11 @@
+{% load static wagtailcore_tags %}
+
+<article class="__gp__tile-grid-block">
+    <div class="__gp__tile-grid-wrapper">
+        <div class="__gp__link-tile__wrapper">
+            {% for tile in value.tiles %}
+                {% include_block tile %}
+            {% endfor %}
+        </div>
+    </div>
+</article>

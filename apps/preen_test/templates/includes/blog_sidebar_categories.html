@@ -1,0 +1,14 @@
+{% load blog_tags %}
+
+<div class="sidebar-categories">
+    <h5>Categories</h5>
+    {% get_active_bloglist page as bloglist %}
+    <ul>
+        {% get_blog_categories as categories %}
+        {% for category in categories %}
+        <li>
+            <a {% if bloglist == category %}class="selected"{% endif %} href="{{ category.url }}">{{ category.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

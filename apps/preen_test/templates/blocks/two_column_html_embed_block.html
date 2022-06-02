@@ -1,0 +1,24 @@
+{% load wagtailcore_tags %}
+
+<article class="__gp__two-column-html-embed-block">
+    <div class="__gp__two-column-html-embed-block__wrapper {% if not value.text_on_left %}reverse{% endif %}">
+        <div class="__gp__two-column-html-embed-block__side __gp__two-column-html-embed-block__text-side">
+            <div class="__gp__two-column-html-embed-block__text-container">
+                <h2 class="__gp__two-column-html-embed-block__heading">
+                    {% include_block value.copy.heading %}
+                </h2>
+                <div class="__gp__two-column-html-embed-block__body">
+                    {% include_block value.copy.body %}
+                </div>
+            </div>
+        </div>
+        <div class="__gp__two-column-html-embed-block__side __gp__two-column-html-embed-block__embed-side">
+            {% include_block value.code %}
+            {% if value.caption %}
+                <div class="__gp__two-column-html-embed-block__caption-container">
+                    <p class="__gp__two-column-html-embed-block__caption">{% include_block value.caption %}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</article>

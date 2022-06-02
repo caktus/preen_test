@@ -1,0 +1,34 @@
+{% load wagtailcore_tags %}
+
+<style id="external-content-embed__styles">
+    {% comment %}
+    NOTE: the "|default" values here should never be reached, if the
+    block's form's `clean` method does the right thing, but since
+    the field is not technically required, an in-template default
+    is also supplied to catch it in case the data ends up in a
+    bad state somehow.
+
+    The supplied default is the decimal expression of the "letterbox"
+    height-to-width ratio widely employed on the site (search for
+    "$letterbox-ratio" to see cases).
+    {% endcomment %}
+
+    .__gp__external-content-embed__propfix {
+        padding-bottom: calc(100% * ({{ value.aspect_ratio|default:'0.5625' }}))
+    }
+</style>
+
+<div class="__gp__external-content-embed__propfix">
+    <div class="__gp__external-content-embed__content">
+        <iframe
+            class="__gp__external-content-embed__iframe"
+            src="{% include_block value.url %}"
+            frameborder="0"
+        ></iframe>
+    </div>
+    {% if value.allow_fullscreen %}
+        <button class="__gp__external-content-embed__fullscreen-button">
+            <i class="__gp__external-content-embed__fullscreen-button-icon fas fa-arrows-alt" ></i>
+        </button>
+    {% endif %}
+</div>

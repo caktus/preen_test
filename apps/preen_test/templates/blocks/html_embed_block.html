@@ -1,0 +1,10 @@
+{% load wagtailcore_tags %}
+
+<div class="__gp__html-embed__wrapper">
+    {% include_block value.code %}
+    {% if value.caption %}
+        <div class="__gp__html-embed__caption-wrapper">
+            <p class="__gp__html-embed__caption">{% include_block value.caption %}</p>
+        </div>
+    {% endif %}
+</div>

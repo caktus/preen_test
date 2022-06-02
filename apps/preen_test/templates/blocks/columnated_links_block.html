@@ -1,0 +1,22 @@
+{% load wagtailcore_tags %}
+{% firstof value.cta_button.display_text value.cta_button.internal_link.seo_title value.cta_button.internal_link.title value.cta_button.document_link as cta_exists %}
+
+<article class="__gp__columnated-links-block">
+    <div class="__gp__columnated-links-block__wrapper">
+        {% if value.title %}
+            <div class="__gp__columnated-links-block__title">
+                <h3>{{ value.title }}</h3>
+            </div>
+        {% endif %}
+        <div class="__gp__columnated-links-block__columns">
+            {% for link in value.links %}
+                {% include_block link %}
+            {% endfor %}
+        </div>
+        {% if cta_exists %}
+        <div class="__gp__columnated-links-block__cta-button">
+            {% include_block value.cta_button %}
+        </div>
+        {% endif %}
+    </div>
+</article>

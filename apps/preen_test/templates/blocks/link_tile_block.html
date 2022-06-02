@@ -1,0 +1,17 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+{% static 'img/blue_header.jpg.imgw.1920.1920.jpg' as static_bg %}
+{% image value.image fill-600x375-c100 as tile_image %} <!--no cover-->
+{% firstof tile_image.url static_bg as bg_image %}
+{% firstof tile_image.alt static_bg as bg_image_alt %}
+{% firstof value.link.external_link value.link.internal_link.url value.link.document_link.url '/' as url %}
+
+
+<div class="__gp__link-tile">
+  <a class="__gp__link-link" href="{{ url }}" {% if value.link.document_link or value.link.external_link %} target="_blank" rel="noopener noreferrer"{% endif %}>
+    <img class="__gp__link-tile__image" src="{{ bg_image }}" alt="{{ bg_image_alt }}">
+    {% if value.title %}
+      <h3 class="__gp__link-tile__title"><span class="__gp__link-tile__title-text">{{ value.title }}</span><svg class="__gp__link_tile_caret"><use xlink:href="#chevron" /></svg></h3>
+    {% endif %}
+  </a>
+  <div class="__gp__link-tile__description">{{ value.description }}</div>
+</div>

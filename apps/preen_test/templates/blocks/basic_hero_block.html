@@ -1,0 +1,24 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+{% static 'img/SC_pattern_blue_dark_rgb_rect.png' as default_image %}
+{% image value.image fill-1380x500-c100 as block_image %}
+{% firstof block_image.url default_image as image %}
+
+<section class="__gp__basic-hero-block">
+    <div class="__gp__basic-hero-block__img-wrap">
+        {% if block_image %}
+        <img class="__gp__basic-hero-block__img" src="{{ image }}" alt="background-image">
+        {% else %}
+        <img class="__gp__basic-hero-block__img-fixed" src="{{ image }}" alt="background-image">
+        {% endif %}
+
+        {% if value.heading and value.use_as_h1 %}
+        <div class="__gp__basic-hero-block__heading-wrap">
+            <h1 class="__gp__basic-hero-block__heading">{{ value.heading }}</h1>
+        </div>
+        {% elif value.heading %}
+        <div class="__gp__basic-hero-block__heading-wrap">
+            <h2 class="__gp__basic-hero-block__heading">{{ value.heading }}</h2>
+        </div>
+        {% endif %}
+    </div>
+</section>

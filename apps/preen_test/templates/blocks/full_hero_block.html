@@ -1,0 +1,28 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% image value.image original as bg_image %}
+
+<article class="__gp__full-hero-block" style="background: url({{ bg_image.url }}) center center / cover no-repeat;">
+  {% if value.video_code %}
+    <div class="__gp__full-hero-block__video" >
+      {% include_block value.video_code %}
+    </div>
+  {% endif %}
+  <div class="__gp__full-hero-block__text">
+    {% if value.heading_as_h1 %}
+      <h1 class="__gp__full-hero-block__heading">{% include_block value.heading %}</h1>
+    {% else %}
+      <h2 class="__gp__full-hero-block__heading">{% include_block value.heading %}</h2>
+    {% endif %}
+
+    {% if value.sub_heading %}
+      <div class="__gp__full-hero-block__sub-heading">{% include_block value.sub_heading %}</div>
+    {% endif %}
+
+    {% if value.cta_buttons %}
+      <div class="__gp__full-hero-block__cta-buttons-wrapper">
+        {% include_block value.cta_buttons %}
+      </div>
+    {% endif %}
+  </div>
+</article>

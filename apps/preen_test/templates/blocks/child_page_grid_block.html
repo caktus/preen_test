@@ -1,0 +1,12 @@
+<article class="__gp__child-page-grid-block">
+  <div class="__gp__child-page-grid-block__wrapper">
+    {% if value.heading %}
+      <h2 class="__gp__child-page-grid-block__heading">{{ value.heading }}</h2>
+    {% endif %}
+    <ul class="__gp__child-page-grid-block__child-list">
+      {% for child_page in value.parent_page.get_children.live %}
+        {% include "gp_wagtail_block_library/includes/child_page_tile.html" with child_page=child_page.specific %}
+      {% endfor %}
+    </ul>
+  </div>
+</article>

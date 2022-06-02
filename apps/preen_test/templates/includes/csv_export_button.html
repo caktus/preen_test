@@ -1,0 +1,8 @@
+{% extends "modeladmin/index.html" %}
+
+{% block header_extra %}
+  <div class="right" style="margin-left: 1rem ">
+    {% include 'modeladmin/includes/button.html' with button=view.button_helper.export_button %}
+  </div>
+{#  {{ block.super }}{% comment %}Display the original buttons if you want, if not remove {% endcomment %}#}
+{% endblock %}

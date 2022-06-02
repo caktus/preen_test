@@ -1,0 +1,18 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{% image value.background_image original as image %}
+
+<section class="newsletter-signup-block">
+    <div class="newsletter-signup-block__wrapper" style="background-image: url('{{ image.url }}'); {{ image.background_position_style }}">
+      <div class="newsletter-signup-block__dimmer">
+
+        <div class="newsletter-signup-block__content">
+          <div class="newsletter-signup-block__text">
+            {{ value.text|richtext }}
+          </div>
+          <div id="swap-target" class="newsletter-signup-block__form-wrapper">
+            {% include 'gp_wagtail_block_library/partials/newsletter_signup_form.html' %}
+          </div>
+        </div>
+      </div>
+    </div>
+</section>

@@ -1,0 +1,9 @@
+{% if value.contact_form %}
+  {% with value.contact_form.form as cform %}
+    {% include 'gp_wagtail_block_library/includes/contact_form.html' %}
+  {% endwith %}
+{% else %}
+  {% with contact_form as cform %}
+    {% include 'gp_wagtail_block_library/includes/contact_form.html' %}
+  {% endwith %}
+{% endif %}

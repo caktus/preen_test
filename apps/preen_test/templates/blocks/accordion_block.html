@@ -1,0 +1,23 @@
+{% load wagtailcore_tags %}
+
+<article class="__gp__accordion-block">
+    <div class="__gp__accordion-block__heading-wrapper">
+        <h2 class="__gp__accordion-block__heading">
+            <div class="__gp__accordion-block__heading-text">{{ value.heading }}</div>
+            <div class="__gp__accordion-block__heading-buttons">
+              <svg class="__gp__accordion-block__heading-button icon-plus"><use xlink:href="#plus" /></svg>
+              <svg class="__gp__accordion-block__heading-button icon-minus"><use xlink:href="#minus" /></svg>
+            </div>
+        </h2>
+    </div>
+    <div class="__gp__accordion-block__content">
+      <div class="__gp__accordion-block__content-wrapper">
+        {{ value.content|richtext }}
+        {% if value.embed %}
+          <div class="__gp__accordion-block__embed">
+            {{ value.embed|safe }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+</article>

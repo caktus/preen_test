@@ -188,7 +188,7 @@ class CTAButtonBlock(LinkBlockBase):
     styled_as_primary = blocks.BooleanBlock(required=False, initial=False, help_text="Styled to draw attention")
 
     class Meta:
-        template = "gp_wagtail_block_library/blocks/cta_button_block.html"
+        template = "blocks/cta_button_block.html"
 
 
 class CTAButtonList(blocks.StreamBlock):
@@ -196,7 +196,7 @@ class CTAButtonList(blocks.StreamBlock):
 
     class Meta:
         icon = "fa-ellipsis-h"
-        template = "gp_wagtail_block_library/blocks/cta_button_list_block.html"
+        template = "blocks/cta_button_list_block.html"
 
 
 class ReorderableStructBlock(blocks.StructBlock):
@@ -265,7 +265,7 @@ class SideBarLink(blocks.StructBlock):
     class Meta:
         icon = "link"
         admin_text = "A series of links either internal or external"
-        template = "gp_wagtail_block_library/blocks/sidebar_link_block.html"
+        template = "blocks/sidebar_link_block.html"
 
 
 class SimpleLinkWImageBlock(blocks.StructBlock):
@@ -280,7 +280,7 @@ class SimpleLinkWImageBlock(blocks.StructBlock):
     class Meta:
         icon = "link"
         admin_text = "A simple link with optional image"
-        template = "gp_wagtail_block_library/includes/simple_link_w_image.html"
+        template = "includes/simple_link_w_image.html"
 
 
 class BaseContactFormChooser(blocks.StructBlock):
@@ -292,7 +292,7 @@ class BaseContactFormChooser(blocks.StructBlock):
 
     class Meta:
         icon = "mail"
-        template = "gp_wagtail_block_library/blocks/contact_form_block.html"
+        template = "blocks/contact_form_block.html"
 
 
 # # # # # # # #
@@ -343,7 +343,7 @@ class Accordion(blocks.StructBlock):
     class Meta:
         icon = "fa-plus-square"
         admin_text = "An accordion with a heading and content that expands when the heading is clicked."
-        template = "gp_wagtail_block_library/blocks/accordion_block.html"
+        template = "blocks/accordion_block.html"
 
 
 class BasicHeroBlock(blocks.StructBlock):
@@ -365,7 +365,7 @@ class BasicHeroBlock(blocks.StructBlock):
     class Meta:
         icon = "fa-file-image-o"
         admin_text = "An banner image with optional heading text"
-        template = "gp_wagtail_block_library/blocks/basic_hero_block.html"
+        template = "blocks/basic_hero_block.html"
 
 
 class TwoColumn(VideoIframeBlockBase, ReorderableStructBlock):
@@ -402,7 +402,7 @@ class TwoColumn(VideoIframeBlockBase, ReorderableStructBlock):
         admin_text = (
             "Two columns, side-by-side on large-enough screens, that display text on one side and an image on the other"
         )
-        template = "gp_wagtail_block_library/blocks/two_column_block.html"
+        template = "blocks/two_column_block.html"
         field_order = ["image", "video_code"]
 
 
@@ -416,7 +416,7 @@ class FullHeroBlock(VideoIframeBlockBase, ReorderableStructBlock):
 
     class Meta:
         icon = "fa-picture-o"
-        template = "gp_wagtail_block_library/blocks/full_hero_block.html"
+        template = "blocks/full_hero_block.html"
         field_order = ["image", "video_code"]
 
 
@@ -432,19 +432,11 @@ class LinkTile(blocks.StructBlock):
 
     class Meta:
         icon = "fa-th-large"
-        template = "gp_wagtail_block_library/blocks/link_tile_block.html"
+        template = "blocks/link_tile_block.html"
 
 
 class LinkTileNoTitle(LinkTile):
     title = blocks.TextBlock(required=False)
-
-
-class ManualLinkTileBlock(blocks.StructBlock):
-    tiles = blocks.StreamBlock([("tile", LinkTile()), ("fooblock", FullHeroBlock())], icon="fa-cards")
-
-    class Meta:
-        icon = "fa-th"
-        template = "gp_wagtail_block_library/blocks/tile_grid_block.html"
 
 
 class ChildPageLinkTileBlock(blocks.StructBlock):
@@ -453,7 +445,7 @@ class ChildPageLinkTileBlock(blocks.StructBlock):
 
     class Meta:
         icon = "fa-th"
-        template = "gp_wagtail_block_library/blocks/child_page_grid_block.html"
+        template = "blocks/child_page_grid_block.html"
 
 
 class ExternalContentEmbedBlock(blocks.StructBlock):
@@ -499,7 +491,7 @@ class ExternalContentEmbedBlock(blocks.StructBlock):
 
     class Meta:
         icon = "media"
-        template = "gp_wagtail_block_library/blocks/external_content_embed.html"
+        template = "blocks/external_content_embed.html"
         label = "Embed External Content"
 
 
@@ -519,8 +511,16 @@ class ColumnatedLinksBlock(blocks.StructBlock):
     class Meta:
         icon = "fa-columns"
         admin_text = "A full-width block with links arranged in columns. Minimum of two links."
-        template = "gp_wagtail_block_library/blocks/columnated_links_block.html"
+        template = "blocks/columnated_links_block.html"
         label = "Two columns of links"
+
+
+class ManualLinkTileBlock(blocks.StructBlock):
+    tiles = blocks.StreamBlock([("tile", LinkTile()), ("fooblock", FullHeroBlock()), ("column_links", ColumnatedLinksBlock())], icon="fa-cards")
+
+    class Meta:
+        icon = "fa-th"
+        template = "blocks/tile_grid_block.html"
 
 
 class HtmlEmbedBlock(blocks.StructBlock):
@@ -548,7 +548,7 @@ class HtmlEmbedBlock(blocks.StructBlock):
 
     class Meta:
         icon = "fa-line-chart"
-        template = "gp_wagtail_block_library/blocks/html_embed_block.html"
+        template = "blocks/html_embed_block.html"
         label = "Embed HTML"
 
     def clean(self, value):
@@ -574,5 +574,5 @@ class TwoColumnHtmlEmbedBlock(HtmlEmbedBlock):
 
     class Meta:
         icon = "fa-columns"
-        template = "gp_wagtail_block_library/blocks/two_column_html_embed_block.html"
+        template = "blocks/two_column_html_embed_block.html"
         label = "Two Column HTML Embed"

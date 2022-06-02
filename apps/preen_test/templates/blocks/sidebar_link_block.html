@@ -1,0 +1,22 @@
+<article class="__gp__sidebar-link-block">
+    <div class="__gp__sidebar-link-block__heading-wrapper">
+        <h2 class="__gp__sidebar-link-block__heading">
+            {{ value.title }}
+        </h2>
+    </div>
+    <div class="__gp__sidebar-link-block__content">
+        {% for link in value.links %}
+            {% firstof link.internal_link.url link.external_link link.document_link.url as url %}
+            {% firstof link.display_text link.internal_link.seo_title link.internal_link.title link.document_link as link_text  %}
+
+            <a class="__gp__sidebar-link-block__content-item body-nav-link" href="{{ url }}" target="_blank" rel="noreferrer noopener">
+                <div class="__gp__sidebar-link-block__content-item-text">
+                    <p>{{ link_text }}</p>
+                </div>
+                <div class="__gp__sidebar-link-block__content-item-caret">
+                    <i><svg class="__gp__sidebar-link-block__caret"><use xlink:href="#si-ant-caret-right" /></svg></i>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</article>
