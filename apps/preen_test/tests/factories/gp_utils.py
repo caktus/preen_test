@@ -12,8 +12,6 @@ from wagtail.images import get_image_model
 
 from bs4 import BeautifulSoup
 
-from apps.gp_wagtail_block_library.tests.models import GPBLGeneralPage
-
 Image = get_image_model()
 Document = get_document_model()
 faker = Faker()
@@ -55,40 +53,3 @@ def get_image_as_wagtail_image(this_title=None):
         title=f"Thumbnail of {this_title}", file=get_test_image_file_jpeg(), collection=_get_collection()
     )
 
-
-class BasePageTest(TestCase):
-    def setUp(self):
-        self.home = GPBLGeneralPage(title="A Test Page")
-        self.factory = RequestFactory()
-        self.site = Site.objects.get(is_default_site=True)
-        self.root = Page.get_first_root_node()
-
-    def make_request(self):
-        self.request = self.factory.get("/")
-        self.response = self.home.serve(self.request)
-        self.response.render()
-        self.soup = BeautifulSoup(self.response.content, "html5lib")
-
-    def get_search(self, query):
-        self.response = self.client.get("/search/", {"query": query})
-        self.soup = BeautifulSoup(self.response.content, "html5lib")
-
-    def add_child_to_root(self, child=None):
-        """
-        Adds a child Page to the root node. If not specified make it the home page
-        """
-        if child:
-            self.root.add_child(instance=child)
-            return
-        self.root.add_child(instance=self.home)
-
-    def set_site_root_page(self, site_root=None):
-        if site_root:
-            self.site.root_page = site_root
-        else:
-            self.site.root_page = self.home
-        self.site.save()
-
-    def make_soup(self, html_to_soupify):
-        """sets the soup to user defined html"""
-        self.soup = BeautifulSoup(html_to_soupify, "html5lib")
