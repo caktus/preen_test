@@ -362,6 +362,7 @@ class ManualLinkTileBlock(blocks.StructBlock):
     image = ImageChooserBlock()
     document = DocumentChooserBlock()
     page = PageChooserBlock()
+    text = blocks.RichTextBlock()
     choices = blocks.ChoiceBlock(choices=LocalChoices.choices)
     lists = blocks.ListBlock(child_block=blocks.RichTextBlock())
     tiles = blocks.StreamBlock([("tile", LinkTile()), ("fooblock", FullHeroBlock()), ("column_links", ColumnatedLinksBlock())], icon="fa-cards")

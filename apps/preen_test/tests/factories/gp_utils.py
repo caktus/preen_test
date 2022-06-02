@@ -10,7 +10,6 @@ from wagtail.core.models import Collection, Page, Site
 from wagtail.documents import get_document_model
 from wagtail.images import get_image_model
 
-from bs4 import BeautifulSoup
 
 Image = get_image_model()
 Document = get_document_model()
